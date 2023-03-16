@@ -9,6 +9,7 @@ import platform
 import subprocess
 import urllib.request
 
+from time import sleep
 from bs4 import BeautifulSoup
 
 def limpiar_pantalla():
@@ -83,16 +84,19 @@ def dwHekate(tempFolder = "temp", destFolder = "COPY_TO_SD"):
     hekate_version = re.search(r'hekate v([\d.]+)', release_title).group(1)
     nyx_version = re.search(r'Nyx v([\d.]+)', release_title).group(1)
     download_url = f"https://github.com/CTCaer/hekate/releases/download/v{hekate_version}/hekate_ctcaer_{hekate_version}_Nyx_{nyx_version}.zip"
-
-    timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    dwName = "hekate{}.zip".format(timestamp)
+    dwName = "hekate{}.zip".format(hekate_version)
     dwPath = os.path.join(tempFolder, dwName)
-    urllib.request.urlretrieve(download_url, dwPath)
+    try:
+        urllib.request.urlretrieve(download_url, dwPath)
+    except FileExistsError:
+        print("[?] Hekate already downloaded.")
+        pass
+    except Exception as e:
+        return "[!] Error downloading Hekate: {}".format(e)
+    
     with zipfile.ZipFile(dwPath, 'r') as zip_ref:
         zip_ref.extractall(destFolder)
-
-    with zipfile.ZipFile(dwPath, 'r') as zip_ref:
-        zip_ref.extractall(destFolder)
+    return "[OK] Hekate downloaded successfully."
 
 def dwAtmosphere(tempFolder = "temp", destFolder = "COPY_TO_SD"):
     url = "https://github.com/Atmosphere-NX/Atmosphere/releases/latest"
@@ -105,21 +109,75 @@ def dwAtmosphere(tempFolder = "temp", destFolder = "COPY_TO_SD"):
     soup = BeautifulSoup(response.text, 'html.parser')
     zip_name = soup.find('span', class_='Truncate-text text-bold').text.strip()
     download_url = f"https://github.com/Atmosphere-NX/Atmosphere/releases/download/{atmosphere_version}/{zip_name}"
-    timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    dwName = "atmosphere{}.zip".format(timestamp)
+    dwName = "atmosphere{}.zip".format(atmosphere_version)
     dwPath = os.path.join(tempFolder, dwName)
-    urllib.request.urlretrieve(download_url, dwPath)
+    try:
+        urllib.request.urlretrieve(download_url, dwPath)
+    except FileExistsError:
+        print("[?] Atmosphere already downloaded.")
+        pass
+    except Exception as e:
+        return "[!] Error downloading Atmosphere: {}".format(e)
+
     with zipfile.ZipFile(dwPath, 'r') as zip_ref:
         zip_ref.extractall(destFolder)
+    return "[OK] Atmosphere downloaded successfully."
 
 def dwSigpatches(tempFolder = "temp", destFolder = "COPY_TO_SD"):
     url = "https://sigmapatches.coomer.party/sigpatches.zip"
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
     dwName = "sigpatches{}.zip".format(timestamp)
     dwPath = os.path.join(tempFolder, dwName)
-    urllib.request.urlretrieve(url, dwPath)
+
+    try:
+        urllib.request.urlretrieve(url, dwPath)
+    except Exception as e:
+        return "[!] Error downloading Sigpatches: {}".format(e)
+    
     with zipfile.ZipFile(dwPath, 'r') as archivo_zip:
         archivo_zip.extractall(destFolder)
+
+    return "[OK] Sigpatches downloaded successfully."
+
+def dwAppStore(tempFolder = "temp", destFolder = "COPY_TO_SD"):
+    url = "https://github.com/fortheusers/hb-appstore/releases/latest"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    release_title = soup.find('h1', class_='d-inline mr-3').text.strip()
+    appstore_version = re.search(r'Homebrew App Store ([\d.]+)', release_title).group(1)
+    download_url = f"https://github.com/fortheusers/hb-appstore/releases/download/{appstore_version}/appstore.nro"
+    dwName = "appstore{}.zip".format(appstore_version)
+    dwPath = os.path.join(tempFolder, dwName)
+    try:
+        urllib.request.urlretrieve(download_url, dwPath)
+    except FileExistsError:
+        print("[?] HB AppStore already downloaded")
+        pass
+    except Exception as e:
+        return "[!] Error downloading HB AppStore: " + str(e)
+    
+    if not os.path.exists(destFolder + "/switch/appstore"):
+        os.makedirs(destFolder + "/switch/appstore")
+    shutil.copy2(dwPath, destFolder + "/switch/appstore/appstore.nro")
+    return "[OK] HB AppStore downloaded successfully."
+
+def dwGoldLeaf(tempFolder = "temp", destFolder = "COPY_TO_SD"):
+    download_url = "https://github.com/XorTroll/Goldleaf/releases/download/0.10/Goldleaf.nro"
+    timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    dwName = "goldleaf{}.zip".format(timestamp)
+    dwPath = os.path.join(tempFolder, dwName)
+    try:
+        urllib.request.urlretrieve(download_url, dwPath)
+    except FileExistsError:
+        print("[?] GoldLeaf already downloaded")
+        pass
+    except Exception as e:
+        return "[!] GoldLeaf download failed: " + str(e)
+    
+    if not os.path.exists(destFolder + "/switch/goldleaf"):
+        os.makedirs(destFolder + "/switch/goldleaf")
+    shutil.copy2(dwPath, destFolder + "/switch/goldleaf/Goldleaf.nro")
+    return "[OK] GoldLeaf downloaded successfully."
 
 def openFolder(folder_path="COPY_TO_SD"):
     current_platform = platform.system()
@@ -147,13 +205,22 @@ def main():
     opcion = mainOptions()
     hbOpciones = homebrewOptions()
 
-    dwHekate()
-    dwAtmosphere()
-    dwSigpatches()
+    print(dwHekate())
+    print(dwAtmosphere())
+    print(dwSigpatches())
+
+    if 1 in hbOpciones:
+        print("tinfoil")
+    if 2 in hbOpciones:
+        print(dwGoldLeaf())
+    if 3 in hbOpciones:
+        print(dwAppStore())
+
 
     value = input("¿Desea abrir la carpeta de destino? (S/N): ")
     if value in ["s", "S"]:
         openFolder()
+        sleep(5)
 
     input("¿Desea eliminar la carpeta temporal? (S/N): ")
     if value in ["s", "S"]:
@@ -162,5 +229,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
