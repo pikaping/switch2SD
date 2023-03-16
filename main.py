@@ -76,6 +76,19 @@ def delFolder(folder):
     if os.path.exists(folder):
         shutil.rmtree(folder)
 
+def downloadZip(download_url, dw_path, dest_folder, url):
+    try:
+        urllib.request.urlretrieve(download_url, dw_path)
+    except FileExistsError:
+        print("[?] {} already exists".format(url))
+        pass
+    except Exception as e:
+        return "[!] Error downloading {}: {}".format(url, e)
+
+    with zipfile.ZipFile(dw_path, 'r') as zip_ref:
+        zip_ref.extractall(dest_folder)
+    return "[OK] {} downloaded successfully.".format(url)
+
 def dwHekate(tempFolder = "temp", destFolder = "COPY_TO_SD"):
     url = "https://github.com/CTCaer/hekate/releases/latest"
     response = requests.get(url)
@@ -83,20 +96,12 @@ def dwHekate(tempFolder = "temp", destFolder = "COPY_TO_SD"):
     release_title = soup.find('h1', class_='d-inline mr-3').text.strip()
     hekate_version = re.search(r'hekate v([\d.]+)', release_title).group(1)
     nyx_version = re.search(r'Nyx v([\d.]+)', release_title).group(1)
-    download_url = f"https://github.com/CTCaer/hekate/releases/download/v{hekate_version}/hekate_ctcaer_{hekate_version}_Nyx_{nyx_version}.zip"
-    dwName = "hekate{}.zip".format(hekate_version)
-    dwPath = os.path.join(tempFolder, dwName)
-    try:
-        urllib.request.urlretrieve(download_url, dwPath)
-    except FileExistsError:
-        print("[?] Hekate already downloaded.")
-        pass
-    except Exception as e:
-        return "[!] Error downloading Hekate: {}".format(e)
-    
-    with zipfile.ZipFile(dwPath, 'r') as zip_ref:
-        zip_ref.extractall(destFolder)
-    return "[OK] Hekate downloaded successfully."
+    return downloadZip(
+        f"https://github.com/CTCaer/hekate/releases/download/v{hekate_version}/hekate_ctcaer_{hekate_version}_Nyx_{nyx_version}.zip",
+        os.path.join(tempFolder, "hekate{}.zip".format(hekate_version)),
+        destFolder,
+        "Hekate"
+    )
 
 def dwAtmosphere(tempFolder = "temp", destFolder = "COPY_TO_SD"):
     url = "https://github.com/Atmosphere-NX/Atmosphere/releases/latest"
@@ -108,36 +113,20 @@ def dwAtmosphere(tempFolder = "temp", destFolder = "COPY_TO_SD"):
     response = requests.get(assets_url)
     soup = BeautifulSoup(response.text, 'html.parser')
     zip_name = soup.find('span', class_='Truncate-text text-bold').text.strip()
-    download_url = f"https://github.com/Atmosphere-NX/Atmosphere/releases/download/{atmosphere_version}/{zip_name}"
-    dwName = "atmosphere{}.zip".format(atmosphere_version)
-    dwPath = os.path.join(tempFolder, dwName)
-    try:
-        urllib.request.urlretrieve(download_url, dwPath)
-    except FileExistsError:
-        print("[?] Atmosphere already downloaded.")
-        pass
-    except Exception as e:
-        return "[!] Error downloading Atmosphere: {}".format(e)
-
-    with zipfile.ZipFile(dwPath, 'r') as zip_ref:
-        zip_ref.extractall(destFolder)
-    return "[OK] Atmosphere downloaded successfully."
+    return downloadZip(
+        f"https://github.com/Atmosphere-NX/Atmosphere/releases/download/{atmosphere_version}/{zip_name}",
+        os.path.join(tempFolder, "atmosphere{}.zip".format(atmosphere_version)),
+        destFolder,
+        "Atmosphere"
+    )
 
 def dwSigpatches(tempFolder = "temp", destFolder = "COPY_TO_SD"):
-    url = "https://sigmapatches.coomer.party/sigpatches.zip"
-    timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    dwName = "sigpatches{}.zip".format(timestamp)
-    dwPath = os.path.join(tempFolder, dwName)
-
-    try:
-        urllib.request.urlretrieve(url, dwPath)
-    except Exception as e:
-        return "[!] Error downloading Sigpatches: {}".format(e)
-    
-    with zipfile.ZipFile(dwPath, 'r') as archivo_zip:
-        archivo_zip.extractall(destFolder)
-
-    return "[OK] Sigpatches downloaded successfully."
+    return downloadZip(
+        "https://sigmapatches.coomer.party/sigpatches.zip",
+        os.path.join(tempFolder, "sigpatches{}.zip".format(datetime.datetime.now().strftime("%Y%m%d%H%M%S"))),
+        destFolder,
+        "Sigpatches"
+    )
 
 def dwAppStore(tempFolder = "temp", destFolder = "COPY_TO_SD"):
     url = "https://github.com/fortheusers/hb-appstore/releases/latest"
