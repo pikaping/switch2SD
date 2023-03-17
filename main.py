@@ -1,7 +1,5 @@
 import os
 import re
-import datetime
-import json
 import shutil
 import zipfile
 import requests
@@ -11,6 +9,48 @@ import urllib.request
 
 from time import sleep
 from bs4 import BeautifulSoup
+from datetime import datetime as dt
+
+data = {
+    "opciones": [
+      {
+        "valor": "1", 
+        "hosts": "# Block Nintendo Servers\n127.0.0.1 *nintendo.*\n127.0.0.1 *nintendo-europe.com\n127.0.0.1 *nintendoswitch.*\n95.216.149.205 *conntest.nintendowifi.net\n95.216.149.205 *ctest.cdn.nintendo.net",
+        "exosphere": "[exosphere]\ndebugmode=1\ndebugmode_user=0\ndisable_user_exception_handlers=0\nenable_user_pmu_access=0\nblank_prodinfo_sysmmc=0\nblank_prodinfo_emummc=1\nallow_writing_to_cal_sysmmc=0\nlog_port=0\nlog_baud_rate=115200\nlog_inverted=0",
+        "hekate_ipl": "[config]\nautoboot=0\nautoboot_list=0\nbootwait=3\nbacklight=100\nautohosoff=0\nautonogc=1\nupdater2p=0\nbootprotect=0\n\n[Atmosphere CFW]\npayload=bootloader/payloads/fusee.bin\nicon=bootloader/res/icon_payload.bmp\n\n[Stock SysNAND]\nfss0=atmosphere/package3\nstock=1\nemummc_force_disable=1\nicon=bootloader/res/icon_switch.bmp"
+      },
+      {
+        "valor": "2",
+        "hosts": "# Block Nintendo Servers\n127.0.0.1 *nintendo.*\n127.0.0.1 *nintendo-europe.com\n127.0.0.1 *nintendoswitch.*\n95.216.149.205 *conntest.nintendowifi.net\n95.216.149.205 *ctest.cdn.nintendo.net",
+        "exosphere": "[exosphere]\ndebugmode=1\ndebugmode_user=0\ndisable_user_exception_handlers=0\nenable_user_pmu_access=0\nblank_prodinfo_sysmmc=1\nblank_prodinfo_emummc=1\nallow_writing_to_cal_sysmmc=0\nlog_port=0\nlog_baud_rate=115200\nlog_inverted=0",
+        "hekate_ipl": "[config]\nautoboot=0\nautoboot_list=0\nbootwait=3\nbacklight=100\nautohosoff=0\nautonogc=1\nupdater2p=0\nbootprotect=0\n\n[Atmosphere - EmuNAND]\npayload=bootloader/payloads/fusee.bin\nicon=bootloader/res/icon_payload.bmp\n\n[Atmosphere - SysNAND]\nfss0=atmosphere/package3\nemummc_force_disable=1\nicon=bootloader/res/icon_payload.bmp\n\n[Stock SysNAND]\nfss0=atmosphere/package3\nstock=1\nemummc_force_disable=1\nicon=bootloader/res/icon_switch.bmp"
+      },
+      {
+        "valor": "3",
+        "hosts": "# Block Nintendo Servers\n127.0.0.1 *nintendo.*\n127.0.0.1 *nintendo-europe.com\n127.0.0.1 *nintendoswitch.*\n95.216.149.205 *conntest.nintendowifi.net\n95.216.149.205 *ctest.cdn.nintendo.net",
+        "exosphere": "[exosphere]\ndebugmode=1\ndebugmode_user=0\ndisable_user_exception_handlers=0\nenable_user_pmu_access=0\nblank_prodinfo_sysmmc=1\nblank_prodinfo_emummc=0\nallow_writing_to_cal_sysmmc=0\nlog_port=0\nlog_baud_rate=115200\nlog_inverted=0",
+        "hekate_ipl": "[config]\nautoboot=0\nautoboot_list=0\nbootwait=3\nbacklight=100\nautohosoff=0\nautonogc=1\nupdater2p=0\nbootprotect=0\n\n[Atmosphere CFW]\npayload=bootloader/payloads/fusee.bin\nicon=bootloader/res/icon_payload.bmp\n\n[Stock SysNAND]\nfss0=atmosphere/package3\nstock=1\nemummc_force_disable=1\nicon=bootloader/res/icon_switch.bmp"
+      },
+      {
+        "valor": "4", 
+        "hosts": "# Block Nintendo Servers\n127.0.0.1 *nintendo.*\n127.0.0.1 *nintendo-europe.com\n127.0.0.1 *nintendoswitch.*\n95.216.149.205 *conntest.nintendowifi.net\n95.216.149.205 *ctest.cdn.nintendo.net",
+        "exosphere": "[exosphere]\ndebugmode=1\ndebugmode_user=0\ndisable_user_exception_handlers=0\nenable_user_pmu_access=0\nblank_prodinfo_sysmmc=0\nblank_prodinfo_emummc=1\nallow_writing_to_cal_sysmmc=0\nlog_port=0\nlog_baud_rate=115200\nlog_inverted=0",
+        "hekate_ipl": "[config]\nautoboot=0\nautoboot_list=0\nbootwait=3\nbacklight=100\nautohosoff=0\nautonogc=1\nupdater2p=0\nbootprotect=0\n\n[Atmosphere - EmuNAND]\npayload=bootloader/payloads/fusee.bin\nicon=bootloader/res/icon_payload.bmp\n\n[Atmosphere - SysNAND]\nfss0=atmosphere/package3\nemummc_force_disable=1\nicon=bootloader/res/icon_payload.bmp\n\n[Warmboot Error Fix]\nfss0=atmosphere/package3\nstock=1\nemummc_force_disable=1\nicon=bootloader/res/icon_switch.bmp"
+      },
+      {
+        "valor": "5",
+        "hosts": "# Block Nintendo Servers\n127.0.0.1 *nintendo.*\n127.0.0.1 *nintendo-europe.com\n127.0.0.1 *nintendoswitch.*\n95.216.149.205 *conntest.nintendowifi.net\n95.216.149.205 *ctest.cdn.nintendo.net",
+        "exosphere": "[exosphere]\ndebugmode=1\ndebugmode_user=0\ndisable_user_exception_handlers=0\nenable_user_pmu_access=0\nblank_prodinfo_sysmmc=1\nblank_prodinfo_emummc=1\nallow_writing_to_cal_sysmmc=0\nlog_port=0\nlog_baud_rate=115200\nlog_inverted=0",
+        "hekate_ipl": "[config]\nautoboot=0\nautoboot_list=0\nbootwait=3\nbacklight=100\nautohosoff=0\nautonogc=1\nupdater2p=0\nbootprotect=0\n\n[Atmosphere CFW]\npayload=bootloader/payloads/fusee.bin\nicon=bootloader/res/icon_payload.bmp"
+      },
+      {
+        "valor": "6",
+        "hosts": "# Block Nintendo Servers\n127.0.0.1 *nintendo.*\n127.0.0.1 *nintendo-europe.com\n127.0.0.1 *nintendoswitch.*\n95.216.149.205 *conntest.nintendowifi.net\n95.216.149.205 *ctest.cdn.nintendo.net",
+        "exosphere": "[exosphere]\ndebugmode=1\ndebugmode_user=0\ndisable_user_exception_handlers=0\nenable_user_pmu_access=0\nblank_prodinfo_sysmmc=1\nblank_prodinfo_emummc=0\nallow_writing_to_cal_sysmmc=0\nlog_port=0\nlog_baud_rate=115200\nlog_inverted=0",
+        "hekate_ipl": "[config]\nautoboot=0\nautoboot_list=0\nbootwait=3\nbacklight=100\nautohosoff=0\nautonogc=1\nupdater2p=0\nbootprotect=0\n\n[Atmosphere CFW]\npayload=bootloader/payloads/fusee.bin\nicon=bootloader/res/icon_payload.bmp"
+      }
+    ]
+  }
 
 def limpiarPantalla():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -66,8 +106,8 @@ def dwSXGear(tempFolder = "temp", destFolder = "COPY_TO_SD"):
     value = input("Do you want to download SX Gear? (Y/N): ")
     if value in ["s", "S", "y", "Y"]:
         downloadZip(
-            "https://web.archive.org/web/20210217231219/https://sx.xecuter.com/download/SX_Gear_v1.1.zip",
-            os.path.join(tempFolder, "sxgear_v1.1.zip"),
+            "https://web.archive.org/web/20210128064352if_/https://sx.xecuter.com/download/SX_Gear_v1.1.zip",
+            os.path.join(tempFolder, "sxgear.zip"),
             destFolder,
             "SX"
         )
@@ -163,7 +203,7 @@ def dwFusee(tempFolder = "temp", destFolder = "COPY_TO_SD"):
 def dwSigpatches(tempFolder = "temp", destFolder = "COPY_TO_SD"):
     return downloadZip(
         "https://sigmapatches.coomer.party/sigpatches.zip",
-        os.path.join(tempFolder, "sigpatches{}.zip".format(datetime.datetime.now().strftime("%Y%m%d%H%M%S"))),
+        os.path.join(tempFolder, "sigpatches{}.zip".format(dt.now().strftime("%Y%m%d%H%M%S"))),
         destFolder,
         "Sigpatches"
     )
@@ -267,29 +307,24 @@ def openFolder(folder_path="COPY_TO_SD"):
         print(f"Unsupported platform: {current_platform}")
 
 if __name__ == '__main__':
-    try:
-        with open('details.json', 'r') as f:
-            data = json.load(f)
-    except Exception as e:
-        print("Error loading details.json: {}".format(e))
-
     delFolder(folder = "COPY_TO_SD")
     mkFolder("temp")
     mkFolder("COPY_TO_SD")
     opcion = mainOptions()
     hbOpciones = homebrewOptions()
-    modded = False
-    if opcion in ["4", "5", "6"]:
-        modded = True
-        sxStatus = dwSXGear()
 
-    if modded:
-        print(sxStatus)
+    if opcion in ["4", "5", "6"]:
+        dwSXGear()
 
     print(dwHekate())
     print(dwAtmosphere())
     print(dwFusee())
     print(dwSigpatches())
+
+    if opcion in ["4", "5", "6"]:
+        for file in os.listdir("COPY_TO_SD"):
+            if file.endswith(".bin"):
+                os.rename("COPY_TO_SD/" + file, "COPY_TO_SD/payload.bin")
 
     if 1 in hbOpciones:
         print(dwTinfoil())
