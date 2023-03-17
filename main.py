@@ -16,8 +16,8 @@ def limpiarPantalla():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def mainOptions():
-    print("Bienvenido al programa de selección de opciones!")
-    print("Por favor, seleccione una de las siguientes opciones: ")
+    print("Welcome to Switch2SD: ") 
+    print("Please select one of the following options: \n")
     print("1. [Erista Unpatched] CFW emuNAND + OFW sysNAND")
     print("2. [Erista Unpatched] CFW emuNAND + CFW sysNAND")
     print("3. [Erista Unpatched] CFW sysNAND\n")
@@ -25,14 +25,14 @@ def mainOptions():
     print("5. [SXCore & HWFly] CFW emuNAND + CFW sysNAND")
     print("6. [SXCore & HWFly] CFW sysNAND\n\n")
 
-    opcion = input("Ingrese el número de la opción que desea seleccionar (1-6): ")
+    opcion = input("Insert the number of the option you want to select (1-6):")
     if opcion not in ["1", "2", "3", "4", "5", "6"]:
-        print("Lo siento, opción inválida. Por favor, ingrese un número de opción válido (1-6).\n")
+        print("Invalid option. Please, insert a valid option number (1-6).")
         limpiarPantalla()
         opcion = mainOptions()
     else:
         limpiarPantalla()
-        print("Ha seleccionado la Opción " + opcion + ".\n")
+        print("You selected option {}.".format(opcion))
     return opcion
 
 def homebrewOptions():
@@ -43,17 +43,17 @@ def homebrewOptions():
     ]
     
     while True:
-        print("Seleccione una o varias de las siguientes opciones: ")      
+        print("Select the homebrew apps you want to download: \n")      
         for opcion in opciones:
             check = "[X]" if opcion["seleccionada"] else "[ ]"
             print(f"{check} {opcion['valor']}. {opcion['nombre']}")
         
-        opcion = input("Ingrese el número de la opción que desea seleccionar (1-3), o presione Enter para continuar: ")
+        opcion = input("Insert the number of the option you want to select (1-3) or press enter to continue: ")
         limpiarPantalla()
         if opcion == "":
             break
         elif opcion not in ["1", "2", "3"]:
-            print("Opción inválida. Por favor, ingrese un número de opción válido (1-3).")
+            print("Invalid option. Please, insert a valid option number (1-3).")
             continue
         opcion = int(opcion)
         opciones[opcion-1]["seleccionada"] = not opciones[opcion-1]["seleccionada"]
@@ -61,8 +61,18 @@ def homebrewOptions():
     opciones_seleccionadas = [opcion["valor"] for opcion in opciones if opcion["seleccionada"]]
     return opciones_seleccionadas
 
-def sxOS():
-    print("sxOS no está disponible en este momento.\n")
+def dwSXGear(tempFolder = "temp", destFolder = "COPY_TO_SD"):
+    print("--- (Skip this if you use a HWFLY modchip) ---")
+    value = input("Do you want to download SX Gear? (Y/N): ")
+    if value in ["s", "S", "y", "Y"]:
+        downloadZip(
+            "https://web.archive.org/web/20210217231219/https://sx.xecuter.com/download/SX_Gear_v1.1.zip",
+            os.path.join(tempFolder, "sxgear_v1.1.zip"),
+            destFolder,
+            "SX"
+        )
+        return True
+
     sleep(5)
     return False
 
@@ -103,9 +113,9 @@ def downloadFile(dw_url, dw_path, dest_folder, url):
     shutil.copy2(dw_path, folder)
     return "[OK] {} downloaded successfully.".format(url)
 
-def downloadZip(download_url, dw_path, dest_folder, url):
+def downloadZip(dw_url, dw_path, dest_folder, url):
     try:
-        urllib.request.urlretrieve(download_url, dw_path)
+        urllib.request.urlretrieve(dw_url, dw_path)
     except FileExistsError:
         print("[?] {} already exists".format(url))
         pass
@@ -143,7 +153,7 @@ def dwAtmosphere(tempFolder = "temp", destFolder = "COPY_TO_SD"):
 def dwFusee(tempFolder = "temp", destFolder = "COPY_TO_SD"):
     url = "https://github.com/Atmosphere-NX/Atmosphere/releases/latest"
     atmosphere_version = getVersion(url, r'Atmosphère ([\d.]+)')
-    return downloadZip(
+    return downloadFile(
         f"https://github.com/Atmosphere-NX/Atmosphere/releases/download/{atmosphere_version}/fusee.bin",
         os.path.join(tempFolder, "fusee.bin"),
         destFolder,
@@ -228,26 +238,19 @@ def writeConfig(value, config_data, destFolder="COPY_TO_SD"):
     if not selected_config:
         print("Invalid value. Configuration not found.")
         return
-
-    # Write exosphere.ini
+    
     with open(exo_path, "w") as exo_file:
         exo_file.write(selected_config["exosphere"])
-
-    # Create bootloader directory if it doesn't exist
+        
     os.makedirs(os.path.dirname(hekate_path), exist_ok=True)
-
-    # Write hekate_ipl.ini
+    
     with open(hekate_path, "w") as hekate_file:
         hekate_file.write(selected_config["hekate_ipl"])
-    
-    # Create hosts directory if it doesn't exist
+        
     os.makedirs(os.path.dirname(hosts_path), exist_ok=True)
-
-    # Write default.txt
+    
     with open(hosts_path, "w") as hosts_file:
         hosts_file.write(selected_config["hosts"])
-
-
     print("Configuration files written successfully.")
 
 def openFolder(folder_path="COPY_TO_SD"):
@@ -262,21 +265,25 @@ def openFolder(folder_path="COPY_TO_SD"):
     else:
         print(f"Unsupported platform: {current_platform}")
 
-def main():
+if __name__ == '__main__':
     try:
         with open('details.json', 'r') as f:
             data = json.load(f)
     except Exception as e:
-        return(print(e))
+        print("Error loading details.json: {}".format(e))
 
     delFolder(folder = "COPY_TO_SD")
     mkFolder("temp")
     mkFolder("COPY_TO_SD")
     opcion = mainOptions()
     hbOpciones = homebrewOptions()
-
+    modded = False
     if opcion in ["4", "5", "6"]:
-        sxStatus = sxOS()
+        modded = True
+        sxStatus = dwSXGear()
+
+    if modded:
+        print(sxStatus)
 
     print(dwHekate())
     print(dwAtmosphere())
@@ -292,14 +299,11 @@ def main():
 
     writeConfig(opcion, data)
 
-    value = input("¿Desea abrir la carpeta de destino? (S/N): ")
-    if value in ["s", "S"]:
+    value = input("Do you want to open COPY_TO_SD folder? (Y/N): ")
+    if value in ["s", "S", "y", "Y"]:
         openFolder()
         sleep(5)
 
-    input("¿Desea eliminar la carpeta temporal? (S/N): ")
-    if value in ["s", "S"]:
+    input("Do you want to delete temp folder? (Y/N): ")
+    if value in ["s", "S", "y", "Y"]:
         delFolder(folder = "temp")
-
-if __name__ == '__main__':
-    main()
