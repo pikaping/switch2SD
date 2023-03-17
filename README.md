@@ -39,9 +39,11 @@ Switch2SD also supports several homebrew applications that you can choose to dow
 When prompted, enter the number of each homebrew application you want to download, separated by commas. If you do not want to download any of the available homebrew applications, simply press Enter without entering any numbers.
 
 ## Notes
-
 This script was written as a proof of concept and should be used with caution. The author of this script is not responsible for any damage that may occur to your Nintendo Switch or SD card.
 
 Thank you to all the talented developers who have contributed to the development of the Nintendo Switch homebrew scene, including those behind Fusee, Atmosphere, Hekate, Tinfoil, Goldleaf, and the Homebrew App Store. Your hard work and dedication have made it possible for gamers to enjoy a wide variety of homebrew software on their Switch consoles. We appreciate all the time and effort you've put into creating these amazing tools and applications. Keep up the great work!
 
 Based on https://rentry.org/SwitchHackingIsEasy guides.
+
+## License
+This project is licensed under the MIT License. See the LICENSE file for details.
