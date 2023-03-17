@@ -193,6 +193,7 @@ def dwTinfoil(tempFolder = "temp", destFolder = "COPY_TO_SD"):
         dw_path = tempFolder + "/tinfoil_self_installer.zip"
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'}
         try:
+            print("[i] Tinfoil NRO (Self Installer) starting download...")
             response = requests.get("https:" + download_url, headers=headers)
             with open(dw_path, 'wb') as f:
                 f.write(response.content)
@@ -203,7 +204,7 @@ def dwTinfoil(tempFolder = "temp", destFolder = "COPY_TO_SD"):
     with zipfile.ZipFile(dw_path, 'r') as zip_ref:
         zip_ref.extractall(destFolder)
 
-    return "[OK] Tinfoil NRO (Self Installer) downloaded successfully."
+    return "[OK] Tinfoil NRO (Self Installer) copied successfully."
 
 def dwAppStore(tempFolder = "temp", destFolder = "COPY_TO_SD"):
     url = "https://github.com/fortheusers/hb-appstore/releases/latest"
