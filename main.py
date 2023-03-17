@@ -35,13 +35,13 @@ data = {
         "valor": "4", 
         "hosts": "# Block Nintendo Servers\n127.0.0.1 *nintendo.*\n127.0.0.1 *nintendo-europe.com\n127.0.0.1 *nintendoswitch.*\n95.216.149.205 *conntest.nintendowifi.net\n95.216.149.205 *ctest.cdn.nintendo.net",
         "exosphere": "[exosphere]\ndebugmode=1\ndebugmode_user=0\ndisable_user_exception_handlers=0\nenable_user_pmu_access=0\nblank_prodinfo_sysmmc=0\nblank_prodinfo_emummc=1\nallow_writing_to_cal_sysmmc=0\nlog_port=0\nlog_baud_rate=115200\nlog_inverted=0",
-        "hekate_ipl": "[config]\nautoboot=0\nautoboot_list=0\nbootwait=3\nbacklight=100\nautohosoff=0\nautonogc=1\nupdater2p=0\nbootprotect=0\n\n[Atmosphere - EmuNAND]\npayload=bootloader/payloads/fusee.bin\nicon=bootloader/res/icon_payload.bmp\n\n[Atmosphere - SysNAND]\nfss0=atmosphere/package3\nemummc_force_disable=1\nicon=bootloader/res/icon_payload.bmp\n\n[Warmboot Error Fix]\nfss0=atmosphere/package3\nstock=1\nemummc_force_disable=1\nicon=bootloader/res/icon_switch.bmp"
+        "hekate_ipl": "[config]\nautoboot=0\nautoboot_list=0\nbootwait=3\nbacklight=100\nautohosoff=0\nautonogc=1\nupdater2p=0\nbootprotect=0\n\n[Atmosphere CFW]\npayload=bootloader/payloads/fusee.bin\nicon=bootloader/res/icon_payload.bmp"
       },
       {
         "valor": "5",
         "hosts": "# Block Nintendo Servers\n127.0.0.1 *nintendo.*\n127.0.0.1 *nintendo-europe.com\n127.0.0.1 *nintendoswitch.*\n95.216.149.205 *conntest.nintendowifi.net\n95.216.149.205 *ctest.cdn.nintendo.net",
         "exosphere": "[exosphere]\ndebugmode=1\ndebugmode_user=0\ndisable_user_exception_handlers=0\nenable_user_pmu_access=0\nblank_prodinfo_sysmmc=1\nblank_prodinfo_emummc=1\nallow_writing_to_cal_sysmmc=0\nlog_port=0\nlog_baud_rate=115200\nlog_inverted=0",
-        "hekate_ipl": "[config]\nautoboot=0\nautoboot_list=0\nbootwait=3\nbacklight=100\nautohosoff=0\nautonogc=1\nupdater2p=0\nbootprotect=0\n\n[Atmosphere CFW]\npayload=bootloader/payloads/fusee.bin\nicon=bootloader/res/icon_payload.bmp"
+        "hekate_ipl": "[config]\nautoboot=0\nautoboot_list=0\nbootwait=3\nbacklight=100\nautohosoff=0\nautonogc=1\nupdater2p=0\nbootprotect=0\n\n[Atmosphere - EmuNAND]\npayload=bootloader/payloads/fusee.bin\nicon=bootloader/res/icon_payload.bmp\n\n[Atmosphere - SysNAND]\nfss0=atmosphere/package3\nemummc_force_disable=1\nicon=bootloader/res/icon_payload.bmp\n\n[Warmboot Error Fix]\nfss0=atmosphere/package3\nstock=1\nemummc_force_disable=1\nicon=bootloader/res/icon_switch.bmp"      
       },
       {
         "valor": "6",
