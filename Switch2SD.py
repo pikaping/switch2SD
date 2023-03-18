@@ -2,6 +2,7 @@ import os
 import re
 import shutil
 import zipfile
+import argparse
 import requests
 import platform
 import subprocess
@@ -51,6 +52,18 @@ data = {
       }
     ]
   }
+
+def parse_args():
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument('--platform', default=None, choices=['Erista', 'HWFly', 'SXCore'], help='Nintendo Switch Platform\n1. Erista Unpatched V1\n2. HWFly: Modchip installed on any patched board.\n3. SXCore: Adds SXGear to the setup.')
+    parser.add_argument('--config', default=None, type=int, choices=range(1,4), help='Configuration\n1. CFW EmuNAND + OFW SysNAND\n2. CFW EmuNAND + CFW SysNAND\n3. CFW SysNAND')
+    parser.add_argument('--hb', nargs='*', default=None, type=int, choices=range(1,4), help='Homebrew Apps\1: Tinfoil [may be slow to download]\n2: HB App Store\3: Goldleaf')
+    parser.add_argument('--open_folder', action='store_true', help='Open COPY_TO_SD folder')
+    parser.add_argument('--delete_temp', action='store_true', help='Delete temp folder')
+    return parser.parse_args()
+
+def are_all_args_set(args):
+    return args.platform is not None and args.config is not None
 
 def limpiarPantalla():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -105,12 +118,6 @@ def dwSXGear(tempFolder = "temp", destFolder = "COPY_TO_SD"):
     print("--- (Skip this if you use a HWFLY modchip) ---")
     value = input("Do you want to download SX Gear? (Y/N): ")
     if value in ["s", "S", "y", "Y"]:
-        downloadZip(
-            "https://web.archive.org/web/20210128064352if_/https://sx.xecuter.com/download/SX_Gear_v1.1.zip",
-            os.path.join(tempFolder, "sxgear.zip"),
-            destFolder,
-            "SX"
-        )
         return True
 
     sleep(5)
@@ -306,16 +313,25 @@ def openFolder(folder_path="COPY_TO_SD"):
     else:
         print(f"Unsupported platform: {current_platform}")
 
-if __name__ == '__main__':
-    delFolder(folder = "COPY_TO_SD")
-    mkFolder("temp")
-    mkFolder("COPY_TO_SD")
+def cliMode():
     opcion = mainOptions()
     hbOpciones = homebrewOptions()
 
     if opcion in ["4", "5", "6"]:
-        dwSXGear()
+        sxBool = dwSXGear()
 
+    runScript(opcion, hbOpciones, sxBool)
+
+    value = input("Do you want to open COPY_TO_SD folder? (Y/N): ")
+    if value in ["s", "S", "y", "Y"]:
+        openFolder()
+        sleep(5)
+
+    input("Do you want to delete temp folder? (Y/N): ")
+    if value in ["s", "S", "y", "Y"]:
+        delFolder(folder = "temp")
+
+def runScript(opcion, hbOpciones, sxBool):
     print(dwHekate())
     print(dwAtmosphere())
     print(dwFusee())
@@ -326,6 +342,20 @@ if __name__ == '__main__':
             if file.endswith(".bin"):
                 os.rename("COPY_TO_SD/" + file, "COPY_TO_SD/payload.bin")
 
+    if sxBool:
+        print("[i] Downloading SX Gear [v1.1]")
+        try:
+            downloadZip(
+                "https://web.archive.org/web/20210128064352if_/https://sx.xecuter.com/download/SX_Gear_v1.1.zip",
+                os.path.join("temp", "sxgear.zip"),
+                "COPY_TO_SD",
+                "SX"
+            )
+            print("[OK] SX Gear [v1.1] downloaded successfully.")
+        except Exception as e:
+            print("[!] Error downloading SX Gear [v1.1]: {}".format(e))
+            print("[!] Please download it manually from https://web.archive.org/web/20210217231219/https://sx.xecuter.com/download/SX_Gear_v1.1.zip")
+
     if 1 in hbOpciones:
         print(dwTinfoil())
     if 2 in hbOpciones:
@@ -335,11 +365,22 @@ if __name__ == '__main__':
 
     writeConfig(opcion, data)
 
-    value = input("Do you want to open COPY_TO_SD folder? (Y/N): ")
-    if value in ["s", "S", "y", "Y"]:
-        openFolder()
-        sleep(5)
 
-    input("Do you want to delete temp folder? (Y/N): ")
-    if value in ["s", "S", "y", "Y"]:
-        delFolder(folder = "temp")
+if __name__ == '__main__':
+    delFolder(folder = "COPY_TO_SD")
+    mkFolder("temp")
+    mkFolder("COPY_TO_SD")
+    args = parse_args()
+    if are_all_args_set(args):
+        sxBool = False
+        if args.platform == "Erista":
+            opcion = args.config
+        else:
+            opcion = args.config + 3
+            if args.platform == "SXCore":
+                sxBool = True
+        
+        print(opcion, args.hb, sxBool)
+        runScript(opcion, args.hb, sxBool)
+    else:
+        cliMode()

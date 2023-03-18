@@ -8,14 +8,13 @@ Switch2SD is a Python script to download and install custom firmware, homebrew a
 - `BeautifulSoup` library
 
 ## How to use
-1. Install the required dependencies.
-2. Clone or download the repository to your computer.
-3. Install the required dependencies by running `pip install -r requirements.txt` in the command prompt.
-4. Run `python switch2sd.py` from a command prompt or terminal.
-5. Follow the on-screen instructions to select the desired configuration and homebrew applications to download.
-6. The files will be downloaded and extracted into a folder named `COPY_TO_SD`.
-7. Copy the contents of the `COPY_TO_SD` folder to the root of your microSD card.
-8. Insert the microSD card into your Nintendo Switch and enjoy your homebrew applications.
+1. Clone or download the repository to your computer.
+2. Install the required dependencies by running `pip install -r requirements.txt` in the command prompt.
+3. Run `python switch2sd.py` from a command prompt or terminal.
+4. Follow the on-screen instructions to select the desired configuration and homebrew applications to download.
+5. The files will be downloaded and extracted into a folder named `COPY_TO_SD`.
+6. Copy the contents of the `COPY_TO_SD` folder to the root of your microSD card.
+7. Insert the microSD card into your Nintendo Switch and enjoy your homebrew applications.
 
 ## Configuration Options
 Switch2SD supports several different configuration options, depending on your Nintendo Switch model and whether or not you have a hardware modchip installed. The available options are:
