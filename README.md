@@ -102,7 +102,7 @@ This script was written as a proof of concept and should be used with caution. T
 
 Thank you to all the talented developers who have contributed to the development of the Nintendo Switch homebrew scene, including those behind Fusee, Atmosphere, Hekate, Tinfoil, Goldleaf, and the Homebrew App Store. Your hard work and dedication have made it possible for gamers to enjoy a wide variety of homebrew software on their Switch consoles. We appreciate all the time and effort you've put into creating these amazing tools and applications. Keep up the great work!
 
-Based on https://rentry.org/SwitchHackingIsEasy guides.
+Based on [SwitchHackingIsEasy](https://rentry.org/SwitchHackingIsEasy) guides.
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
