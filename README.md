@@ -36,6 +36,14 @@ Switch2SD is a Python script to download and install custom firmware, homebrew a
 
 Note that if you don't specify a value for --platform or --config, the script will use the default values of None. However, you must provide a value for these arguments to use the script in args mode, otherwise it will run on interactive mode.
 
+### How to compile the script
+
+Use the following command to compile the CLI version of the script into an exe file:
+'pyinstaller --F Switch2SD.py'
+
+If you want to compile the GUI version of the script, use the following command:
+'pyinstaller --noconsole -F Switch2SD_GUI.py'
+
 ## MacOS, Linux and Windows (Python script version)
 
 ### Dependencies
