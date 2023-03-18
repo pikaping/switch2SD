@@ -19,16 +19,17 @@ Switch2SD is a Python script to download and install custom firmware, homebrew a
 ## How to use CLI args mode
 1. Open a terminal or command prompt on your system.
 2. Navigate to the directory where the script is located.
-3. Run `python switch2sd.py` from a command prompt or terminal.
+3. Install the required dependencies by running `pip install -r requirements.txt` in the command prompt.
+4. Run `python switch2sd.py` from a command prompt or terminal.
 Use the following arguments to specify the desired behavior of the script:
 --platform: Use this argument to specify the Nintendo Switch platform you are using. You can choose from 'Erista', 'HWFly', or 'SXCore'. For example: --platform Erista
 --config: Use this argument to specify the configuration you want to use. You can choose from 1, 2, or 3. For example: --config 2
 --hb: Use this argument to specify the homebrew app you want to use. You can choose from 1, 2, or 3. You can specify multiple homebrew apps by separating them with a space, like this: --hb 1 2. This argument is optional.
 --open_folder: Use this argument if you want to open the COPY_TO_SD folder. This argument is optional.
 --delete_temp: Use this argument if you want to delete the temp folder. This argument is optional.
-4. The files will be downloaded and extracted into a folder named `COPY_TO_SD`.
-5. Copy the contents of the `COPY_TO_SD` folder to the root of your microSD card.
-6. Insert the microSD card into your Nintendo Switch and enjoy your homebrew applications.
+5. The files will be downloaded and extracted into a folder named `COPY_TO_SD`.
+6. Copy the contents of the `COPY_TO_SD` folder to the root of your microSD card.
+7. Insert the microSD card into your Nintendo Switch and enjoy your homebrew applications.
 
 ## Configuration Options
 Switch2SD supports several different configuration options, depending on your Nintendo Switch model and whether or not you have a hardware modchip installed. The available options are:
