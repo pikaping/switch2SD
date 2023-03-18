@@ -2,7 +2,7 @@
 
 Switch2SD is a Python script to download and install custom firmware, homebrew applications, and other files needed to run homebrew software on the Nintendo Switch game console.
 
-## Windows
+## Windows (Compiled exe version)
 
 ### How to use GUI mode
 1. Download the compiled exe version of the script from [releases](https://github.com/pikaping/switch2SD/releases/latest).
@@ -36,7 +36,7 @@ Switch2SD is a Python script to download and install custom firmware, homebrew a
 
 Note that if you don't specify a value for --platform or --config, the script will use the default values of None. However, you must provide a value for these arguments to use the script in args mode, otherwise it will run on interactive mode.
 
-## MacOS, Linux and Windows (This option hasn't been tested yet.)
+## MacOS, Linux and Windows (Python script version)
 
 ### Dependencies
 - Python 3.6 or higher
