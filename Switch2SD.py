@@ -258,7 +258,7 @@ def dwAppStore(tempFolder = "temp", destFolder = "COPY_TO_SD"):
     appstore_version = getVersion(url, r'Homebrew App Store ([\d.]+)')
     return downloadFile(
         f"https://github.com/fortheusers/hb-appstore/releases/download/{appstore_version}/appstore.nro",
-        os.path.join(tempFolder, "appstore{}.zip".format(appstore_version)),
+        os.path.join(tempFolder, "appstore{}.nro".format(appstore_version)),
         destFolder,
         "appstore"
     )
@@ -266,7 +266,7 @@ def dwAppStore(tempFolder = "temp", destFolder = "COPY_TO_SD"):
 def dwGoldLeaf(tempFolder = "temp", destFolder = "COPY_TO_SD"):
     return downloadFile(
         "https://github.com/XorTroll/Goldleaf/releases/download/0.10/Goldleaf.nro",
-        os.path.join(tempFolder, "goldleaf_v0.10.zip"),
+        os.path.join(tempFolder, "goldleaf_v0.10.nro"),
         destFolder,
         "GoldLeaf"
     )
